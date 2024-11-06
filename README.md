@@ -7,14 +7,14 @@ Let people know what your project can do specifically. Provide context and add a
 
 ## Progress
 
-- [] Setup github repo
-- [] Create folder structure
-- [] Install packages
-- [] Create nextJS app
-- [] Setup Postgress database
-- [] Create connection utility
-- [] Define Postgress models
-- [] Implement core API routes
+- [X] Setup github repo
+- [X] Create folder structure - Added basic folders structure for routing
+- [X] Install packages - Installed basic packages
+- [X] Create nextJS app
+- [X] Setup Postgress database - Created a local database
+- [X] Create connection utility 
+- [X] Define Postgress models - Basic book model and user model
+- [X] Implement core API routes - Added basic CRUD functionality
 - [] Implement Authentication and Authorization
 - [] Setup error responses
 - [] Integrate socket.io for realtime notifications

@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-// GET: Fetch all books from the database
+// GET: Fetch books from the database by Id or query
 export async function GET(request: Request) {
     // Parse query parameters
     const url = new URL(request.url);
@@ -106,6 +106,7 @@ export async function POST(request: Request) {
     return NextResponse.json(newBook);
 }
 
+// DELETE: Delete book by Id
 export async function DELETE(request: Request) {
     // Parse query parameters to get the book ID
     const url = new URL(request.url);
