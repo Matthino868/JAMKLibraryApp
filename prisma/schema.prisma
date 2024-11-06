@@ -18,15 +18,19 @@ model User {
   email    String  @unique
   password String
   name     String?
-  books    Book[]
+  books    Book[]  @relation("UserBooks") // Named relation for clarity
 }
 
 model Book {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   author      String
+  pages       Int
+  genre       String[]
   publishedAt DateTime?
-  isAvailable Boolean  @default(true)
-  userId      Int?
-  user        User?    @relation(fields: [userId], references: [id])
+  isAvailable Boolean   @default(true)
+  reserved    Int[]     // Stores the queue of user IDs
+
+  user        User?     @relation("UserBooks", fields: [userId], references: [id]) // Foreign key relation
+  userId      Int?      // Foreign key to User
 }

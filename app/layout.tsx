@@ -1,5 +1,4 @@
-// /app/layout.tsx
-import './globals.css';  // Global CSS file (if you have one)
+import './globals.css'; 
 import { ReactNode } from 'react';
 
 export const metadata = {
@@ -19,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <h1>Welcome to the Library App</h1>
         </header>
         <main>
-          {children}  {/* The content of the pages will be rendered here */}
+          {children} 
         </main>
       </body>
     </html>
