@@ -1,9 +1,10 @@
-// /app/api/books/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth/next'; // Import NextAuth's getServerSession
 
-// GET: Fetch books from the database by Id or query
-export async function GET(request: Request) {
+// GET: Fetch books from the database by Id or query (Unprotected)
+export async function GET(request: NextRequest) {
+    console.log("GET route called")
     // Parse query parameters
     const url = new URL(request.url);
     const bookId = url.searchParams.get('bookId');
@@ -82,8 +83,15 @@ export async function GET(request: Request) {
     return NextResponse.json(books);
 }
 
-// POST: Create a new book
-export async function POST(request: Request) {
+// POST: Create a new book (Protected)
+export async function POST(request: NextRequest) {
+    console.log("POST route called")
+    // console.log(request)
+    // const session = await getServerSession({ req: request }); // Get session from NextAuth
+    // if (!session) {
+    //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
+    // }
+
     const { title, author, publishedAt, genre, pages } = await request.json();
 
     if (!title || !author || !genre || !pages) {
@@ -101,13 +109,19 @@ export async function POST(request: Request) {
             reserved: []
         },
     });
-    console.log("Book added succesfully")
+
+    console.log("Book added successfully")
     console.log(newBook)
     return NextResponse.json(newBook);
 }
 
-// DELETE: Delete book by Id
-export async function DELETE(request: Request) {
+// DELETE: Delete book by Id (Protected)
+export async function DELETE(request: NextRequest) {
+    const session = await getSession({ req: request }); // Get session from NextAuth
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
+    }
+
     // Parse query parameters to get the book ID
     const url = new URL(request.url);
     const bookId = url.searchParams.get('bookId');
@@ -130,5 +144,3 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Failed to delete book' }, { status: 500 });
     }
 }
-
-
