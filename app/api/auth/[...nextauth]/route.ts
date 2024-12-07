@@ -41,7 +41,7 @@ export const authOptions: AuthOptions = {
                     id: user.id.toString(), // Convert number to string
                     name: user.name,
                     email: user.email
-                };;
+                };
 
             }
         })

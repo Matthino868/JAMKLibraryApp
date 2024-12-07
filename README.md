@@ -15,7 +15,9 @@ Let people know what your project can do specifically. Provide context and add a
 - [X] Create connection utility 
 - [X] Define Postgress models - Basic book model and user model
 - [X] Implement core API routes - Added basic CRUD functionality
-- [] Implement Authentication and Authorization
+- [X] Implement Authentication and Authorization
+- [X] Add functionality to borrow books
+- [] Show book images that are stored somewhere
 - [] Setup error responses
 - [] Integrate socket.io for realtime notifications
 - [] Test API with postman
