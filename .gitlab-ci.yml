@@ -1,5 +1,5 @@
 default:
-  image: node:16.16.0
+  image: node:18.18.0
 
 deploy_preview:
   stage: deploy
@@ -22,3 +22,5 @@ deploy_production:
     - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
     - vercel build --prod --token=$VERCEL_TOKEN
     - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+  tags:
+    - general
