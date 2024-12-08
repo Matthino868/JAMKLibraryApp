@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma from '../../../lib/prisma';
 import { getServerSession } from 'next-auth/next'; // Import NextAuth's getServerSession
 
 // GET: Fetch books from the database by Id or query (Unprotected)
