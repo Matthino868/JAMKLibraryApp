@@ -5,14 +5,14 @@ import { getServerSession } from 'next-auth/next'; // Import NextAuth's getServe
 // GET: Fetch books from the database by Id or query (Unprotected)
 export async function GET(request: NextRequest) {
 
-    // Check the session
-    const session = await getServerSession();
-    if (!session) {
-        return NextResponse.json(
-            { error: 'Unauthorized' },
-            { status: 401 }
-        );
-    }
+    // // Check the session
+    // const session = await getServerSession();
+    // if (!session) {
+    //     return NextResponse.json(
+    //         { error: 'Unauthorized' },
+    //         { status: 401 }
+    //     );
+    // }
 
     console.log("GET route called")
     // Parse query parameters
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
                         },
                     ],
                 }] : []),
-
+    
                 // Match by title filter
                 ...(title ? [{
                     title: {
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
                         mode: 'insensitive',
                     },
                 }] : []),
-
+    
                 // Match by author filter
                 ...(author ? [{
                     author: {
@@ -127,21 +127,20 @@ export async function GET(request: NextRequest) {
                         mode: 'insensitive',
                     },
                 }] : []),
-
+    
                 // Match by genres
-                ...(genres.length > 0 ? [{
+                ...(genres && genres.length > 0 ? [{
                     genre: {
                         hasSome: genres,
                     },
                 }] : []),
-
+    
                 // Match by page filters
-                ...(Object.keys(pagesFilter).length > 0 ? [pagesFilter] : []),
-            ],
+                ...(pagesFilter && Object.keys(pagesFilter).length > 0 ? [pagesFilter] : []),
+            ].filter(Boolean), // Filter out any undefined or null values
         },
     });
-
-
+    
     return NextResponse.json(books);
 }
 
@@ -165,7 +164,6 @@ export async function POST(request: NextRequest) {
             title,
             author,
             publishedAt: publishedAt ? new Date(publishedAt) : null,
-            isAvailable: true,
             genre: [genre],
             pages: pages,
             reserved: []
@@ -233,7 +231,7 @@ export async function PUT(request: NextRequest) {
     const { title, author, publishedAt, genre, pages, userId } = await request.json();
     console.log("request", userId)
 
-    if(userId === null && book.userId.id !== Number(session.user.id)){
+    if(userId === null && book.userId !== Number(session.user.id)){
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

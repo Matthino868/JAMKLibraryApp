@@ -5,7 +5,18 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const authOptions: AuthOptions = {
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+            name?: string;
+            email?: string;
+            image?: string;
+        };
+    }
+}
+
+const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -62,7 +73,7 @@ export const authOptions: AuthOptions = {
         },
         async session({ session, token }) {
             // Make user ID, name, and email available in the session
-            session.user.id = token.id;
+            session.user.id = token.id as string;
             session.user.name = token.name;
             session.user.email = token.email;
             return session;

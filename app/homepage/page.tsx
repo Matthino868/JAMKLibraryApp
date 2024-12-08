@@ -3,7 +3,6 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { NextResponse } from 'next/server';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
 
@@ -16,7 +15,7 @@ interface Book {
 }
 
 export default function HomePage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');

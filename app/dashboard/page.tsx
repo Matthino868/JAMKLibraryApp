@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react';
 
 export default function DashboardPage() {
-    const { data: session, status } = useSession();
+    const { data: session} = useSession();
     console.log("session", session);
     return (
         <div>
