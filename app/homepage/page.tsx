@@ -19,14 +19,9 @@ export default function HomePage() {
   const { data: session } = useSession();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState('');
-  const [pages, setPages] = useState(0);
+  const [borrowedBooks, setBorrowedBooks] = useState([]);
+
   const [selectedBook, setSelectedBook] = useState(null);
-
-
-  const [publishedAt, setPublishedAt] = useState('');
 
   // Fetch books from the API on component mount
   useEffect(() => {
@@ -44,34 +39,6 @@ export default function HomePage() {
     fetchBooks();
   }, []);
 
-  // // Get all the borrowed books
-  // console.log("books", books);
-  // console.log("session", session);
-
-  // Handle add book
-  const handleAddBook = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch('/api/books', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, author, publishedAt, pages, genre }),
-    });
-
-    if (response.ok) {
-      const newBook = await response.json();
-      setBooks((prevBooks) => [...prevBooks, newBook]);
-      setTitle('');
-      setAuthor('');
-      setPublishedAt('');
-      alert('Book added successfully!');
-    } else {
-      const errorData = await response.json();
-      alert(`Error: ${errorData.error}`);
-    }
-  };
-
   const handleBookClick = (book) => {
     setSelectedBook(book);
   };
@@ -81,7 +48,11 @@ export default function HomePage() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p className="text-lg mb-4">Loading...</p>
+      </div>
+    )
   }
 
   if (!session) {
@@ -103,19 +74,25 @@ export default function HomePage() {
           >
             Search books
           </button>
+          <button
+            onClick={() => window.location.href = '/testpage'}
+            className="bg-transparent border text-white-800 px-4 py-2 rounded-md mr-4 hover:bg-white hover:text-purple-800"
+          >
+            Test API
+          </button>
         </div>
         <h1 className='text-xl'>Welcome {session.user.name}</h1>
 
-          <button
-            onClick={async () => {
-              const res = await signOut();
-              console.log(res);
-            }}
-            className="bg-pink-500 text-white px-4 py-2 rounded-md  hover:bg-white hover:text-pink-800"
-          >
-            Logout
-          </button>
-        </div>
+        <button
+          onClick={async () => {
+            const res = await signOut();
+            console.log(res);
+          }}
+          className="bg-pink-500 text-white px-4 py-2 rounded-md  hover:bg-white hover:text-pink-800"
+        >
+          Logout
+        </button>
+      </div>
 
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
@@ -145,7 +122,7 @@ export default function HomePage() {
               ))}
           </ul>
         ) : (
-          <p className="text-gray-500">No reserved books.</p>
+          <p className="text-gray-500">No reserved books...</p>
         )}
 
         <h2 className="text-2xl font-bold mb-4">Available Books</h2>
@@ -163,65 +140,6 @@ export default function HomePage() {
         <Modal isOpen={!!selectedBook} onClose={closeModal}>
           {selectedBook && <BookDetails book={selectedBook} />}
         </Modal>
-
-        <h3 className="text-xl font-semibold mt-8 mb-4">Add a New Book</h3>
-        <form onSubmit={handleAddBook} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Title:</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Author:</label>
-            <input
-              type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              required
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Published Date:</label>
-            <input
-              type="date"
-              value={publishedAt}
-              onChange={(e) => setPublishedAt(e.target.value)}
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Genre:</label>
-            <input
-              type="text"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Pages:</label>
-            <input
-              type="number"
-              value={pages}
-              onChange={(e) => setPages(Number(e.target.value))}
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Add Book
-          </button>
-        </form>
-
-
       </div>
     </>
   );

@@ -46,13 +46,12 @@ export default function SearchPage() {
         );
     };
     const handleSearch = async () => {
-        console.log("genre", selectedGenres);
         const queryParams = new URLSearchParams({
-            ...(query && { query }),
+            ...(query && { keyword: query }),
             ...(title && { title }),
             ...(author && { author }),
             ...(minPages && { minPages: minPages.toString() }),
-            ...(maxPages && { maxPages: maxPages.toString() }),
+            ...(maxPages < 2000 && { maxPages: maxPages.toString() }),
             ...(selectedGenres.length && { genre: selectedGenres.join(',') }),
         }).toString();
 
@@ -111,11 +110,13 @@ export default function SearchPage() {
                             </div>
                             <div className="flex flex-col items-end">
                                 <div>
-                                    <p className="text-sm text-gray-600">{book.genre.map((genre, index) => (
-                                        <>
-                                            {index > 0 ? ', ' : ''}{genre.charAt(0).toUpperCase() + genre.slice(1)}
-                                        </>
-                                    ))}</p>
+                                    <p className="text-sm text-gray-600">
+                                        {book.genre.map((genre, index) => (
+                                            <span key={index}>
+                                                {index > 0 ? ', ' : ''}{genre.charAt(0).toUpperCase() + genre.slice(1)}
+                                            </span>
+                                        ))}
+                                    </p>
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Due date: 29 Sept. 2024</p>
