@@ -54,7 +54,7 @@ export default function HomePage() {
       </div>
     )
   }
-
+  console.log("session", session)
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -74,12 +74,14 @@ export default function HomePage() {
           >
             Search books
           </button>
-          <button
-            onClick={() => window.location.href = '/testpage'}
-            className="bg-transparent border text-white-800 px-4 py-2 rounded-md mr-4 hover:bg-white hover:text-purple-800"
-          >
-            Test API
-          </button>
+          {session.user.admin === true ? (
+            <button
+              onClick={() => window.location.href = '/testpage'}
+              className="bg-transparent border text-white-800 px-4 py-2 rounded-md mr-4 hover:bg-white hover:text-purple-800"
+            >
+              Admin Panel
+            </button>
+          ) : null}
         </div>
         <h1 className='text-xl'>Welcome {session.user.name}</h1>
 

@@ -12,7 +12,15 @@ declare module "next-auth" {
             name?: string;
             email?: string;
             image?: string;
+            admin?: boolean;
         };
+    }
+    interface User {
+        id: string;
+        name?: string;
+        email?: string;
+        image?: string;
+        admin?: boolean;
     }
 }
 
@@ -51,7 +59,8 @@ const authOptions: AuthOptions = {
                 return {
                     id: user.id.toString(), // Convert number to string
                     name: user.name,
-                    email: user.email
+                    email: user.email,
+                    admin: user.admin == true ? true : false
                 };
 
             }
@@ -68,6 +77,7 @@ const authOptions: AuthOptions = {
                 token.id = user.id;      // Add user ID
                 token.name = user.name;  // Add user name
                 token.email = user.email; // Add user email
+                token.admin = user.admin; // Add user admin
             }
             return token;
         },
@@ -76,6 +86,7 @@ const authOptions: AuthOptions = {
             session.user.id = token.id as string;
             session.user.name = token.name;
             session.user.email = token.email;
+            session.user.admin = token.admin as boolean;
             return session;
         },
     },

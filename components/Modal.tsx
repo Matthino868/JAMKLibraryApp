@@ -17,16 +17,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       onClick={onClose} // Close modal when clicking the background
     >
       <div
-        className="bg-white p-6 rounded shadow-lg max-w-sm w-full"
+        className="flex flex-col bg-white p-6 rounded shadow-lg max-w-3xl w-full"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
-        {children}
         <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          className="text-xl font-semibold mb-4 bg-transparent text-black rounded self-end"
           onClick={onClose}
         >
-          Close
+          &#x2715;
         </button>
+        {children}
       </div>
     </div>
   );

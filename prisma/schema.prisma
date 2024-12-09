@@ -20,6 +20,7 @@ model User {
   password String
   books    Book[]    @relation("UserBooks") // Named relation for clarity
   sessions Session[]
+  admin    Boolean  @default(false)
 }
 
 model Session {

@@ -15,7 +15,6 @@ export default function Testpage() {
 
     const [bookId, setBookId] = useState("");
 
-
     // Handle add book
     const handleAddBook = async (e: React.FormEvent) => {
         e.preventDefault();
