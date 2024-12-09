@@ -14,30 +14,31 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String?
-  email    String  @unique
+  email    String    @unique
   password String
-  books    Book[]  @relation("UserBooks") // Named relation for clarity
+  books    Book[]    @relation("UserBooks") // Named relation for clarity
   sessions Session[]
 }
 
 model Session {
-  id        Int     @id @default(autoincrement())
-  token     String  @unique
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
   userId    Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   author      String
   pages       Int
   genre       String[]
-  publishedAt DateTime?
-  reserved    Int[]     // Stores the queue of user IDs
+  returnedAt  DateTime?
+  reserved    Int[] // Stores the queue of user IDs
   user        User?     @relation("UserBooks", fields: [userId], references: [id]) // Foreign key relation
-  userId      Int?      // Foreign key to User
+  userId      Int? // Foreign key to User
+  description String?
 }

@@ -5,7 +5,6 @@ const BookDetails = ({ book }) => {
   const { data: session } = useSession();
   if (!book) return null;
 
-
   const handleBook = async (userId) => {
     console.log("Borrowing book", book.title, book.id);
     console.log("userId", userId);
@@ -24,11 +23,11 @@ const BookDetails = ({ book }) => {
         console.error('Error:', error);
       });
   };
-  console.log("book", book.userId);
-  console.log("session", session.user);
+  // console.log("book", book.userId);
+  // console.log("session", session.user);
   return (
     <div>
-      <h2 className="text-xl font-bold mb-2">{book.title}</h2>
+      <h2 className=" text-gray-700 text-xl font-bold mb-2">{book.title}</h2>
       <p className="text-gray-700">Author: {book.author}</p>
       <p className="text-gray-600 mt-4">{book.description}</p>
       {book.userId === Number(session.user.id) ? (

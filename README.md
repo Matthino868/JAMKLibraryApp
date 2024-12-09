@@ -17,8 +17,10 @@ Let people know what your project can do specifically. Provide context and add a
 - [X] Implement core API routes - Added basic CRUD functionality
 - [X] Implement Authentication and Authorization
 - [X] Add functionality to borrow books
-- [] Show book images that are stored somewhere
+- [X] Show book images 
 - [] Setup error responses
+- [] show the data when books should be back.
+- [] show place in reserved queue
 - [] Integrate socket.io for realtime notifications
 - [] Test API with postman
 - [] deploy API on Vercel or heroku

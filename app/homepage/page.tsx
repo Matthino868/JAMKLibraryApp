@@ -2,6 +2,7 @@
 'use client';
 
 import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
@@ -93,26 +94,28 @@ export default function HomePage() {
   }
   return (
     <>
-      <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
-
-        <h1 className="text-xl font-bold">Library App</h1>
+      <div className="bg-purple-800 text-white p-4 flex justify-between items-center">
+        <div className='flex items-center justify-start'>
+          <Image src="/images/logo1x.png" alt="Logo" className="w-20 h-12 mr-2" width={764} height={462} />
+          <button
+            onClick={() => window.location.href = '/search'}
+            className="bg-transparent border text-white-800 px-4 py-2 rounded-md mr-4 hover:bg-white hover:text-purple-800"
+          >
+            Search books
+          </button>
+        </div>
         <h1 className='text-xl'>Welcome {session.user.name}</h1>
-        <button
-          onClick={() => window.location.href = '/search'}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Go to Search
-        </button>
-        <button
-          onClick={async () => {
-            const res = await signOut();
-            console.log(res);
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Logout
-        </button>
-      </div>
+
+          <button
+            onClick={async () => {
+              const res = await signOut();
+              console.log(res);
+            }}
+            className="bg-pink-500 text-white px-4 py-2 rounded-md  hover:bg-white hover:text-pink-800"
+          >
+            Logout
+          </button>
+        </div>
 
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
@@ -136,9 +139,9 @@ export default function HomePage() {
             {books
               .filter((book) => book.reserved?.includes(Number(session?.user?.id)))
               .map((book) => (
-          <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-            <strong>{book.title}</strong> by {book.author}
-          </li>
+                <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
+                  <strong>{book.title}</strong> by {book.author}
+                </li>
               ))}
           </ul>
         ) : (

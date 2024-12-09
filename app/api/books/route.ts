@@ -41,55 +41,28 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(userBooks);
     }
-
+    // console.log("url", url.searchParams)
     // Search queries
     const title = url.searchParams.get('title') // Query param to filter title
     const author = url.searchParams.get('author') // Query param to filter author
-    const genres = url.searchParams.getAll('genre')
+    let genres = url.searchParams.get('genre')
+    let genreList = []
+    if (genres) {
+        genreList = genres.split(',')
+    }  // Query param to filter genres
+    console.log("genres", genres)
     const pages = url.searchParams.get('pages')
     const keyword = url.searchParams.get('keyword')
+    const minPages = url.searchParams.get('minPages')
+    const maxPages = url.searchParams.get('maxPages')
 
-    // Prepare filter for pages (if range is provided)
-    let pagesFilter = {};
-    if (pages) {
-        const [minPages, maxPages] = pages.split(',').map(Number)
-
-        // Ensure that minPages and maxPages are valid numbers
-        if (isNaN(minPages) || isNaN(maxPages)) {
-            return NextResponse.json({ error: 'Invalid page range' }, { status: 400 });
-        }
-
-        // Apply the range filter: books with pages between minPages and maxPages
-        pagesFilter = {
-            pages: {
-                gte: minPages, // Greater than or equal to minPages
-                lte: maxPages, // Less than or equal to maxPages
-            },
-        };
-    }
-
-    // const books = await prisma.book.findMany({
-    //     where: {
-    //         ...(title && {
-    //             title: {
-    //                 contains: title, // Match titles containing the filter value
-    //                 mode: 'insensitive', // Make the search case-insensitive
-    //             },
-    //         }),
-    //         ...(author && {
-    //             author: {
-    //                 contains: author, // Match authors containing the filter value
-    //                 mode: 'insensitive', // Make the search case-insensitive
-    //             },
-    //         }),
-    //         ...(genres.length > 0 && {
-    //             genre: {
-    //                 hasSome: genres, // Match books with any of the genres provided
-    //             },
-    //         }),
-    //         ...(Object.keys(pagesFilter).length > 0 && pagesFilter),
-    //     },
-    // });
+    // Apply the range filter: books with pages between minPages and maxPages
+    const pagesFilter = {
+        pages: {
+            ...(minPages && { gte: Number(minPages) }), // Greater than or equal to minPages
+            ...(maxPages && { lte: Number(maxPages) }), // Less than or equal to maxPages
+        },
+    };
 
     const books = await prisma.book.findMany({
         where: {
@@ -111,7 +84,7 @@ export async function GET(request: NextRequest) {
                         },
                     ],
                 }] : []),
-    
+
                 // Match by title filter
                 ...(title ? [{
                     title: {
@@ -119,7 +92,7 @@ export async function GET(request: NextRequest) {
                         mode: 'insensitive',
                     },
                 }] : []),
-    
+
                 // Match by author filter
                 ...(author ? [{
                     author: {
@@ -127,20 +100,20 @@ export async function GET(request: NextRequest) {
                         mode: 'insensitive',
                     },
                 }] : []),
-    
+
                 // Match by genres
-                ...(genres && genres.length > 0 ? [{
+                ...(genres && genreList.length > 0 ? [{
                     genre: {
-                        hasSome: genres,
+                        hasSome: genreList,
                     },
                 }] : []),
-    
+
                 // Match by page filters
                 ...(pagesFilter && Object.keys(pagesFilter).length > 0 ? [pagesFilter] : []),
             ].filter(Boolean), // Filter out any undefined or null values
         },
     });
-    
+
     return NextResponse.json(books);
 }
 
@@ -153,20 +126,20 @@ export async function POST(request: NextRequest) {
     //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
     // }
 
-    const { title, author, publishedAt, genre, pages } = await request.json();
-
-    if (!title || !author || !genre || !pages) {
+    const { title, author, genre, pages, description } = await request.json();
+    if (!title || !author || !genre || !pages || !description) {
         return NextResponse.json({ error: 'Fields are missing' }, { status: 400 });
     }
 
+    console.log("genre", genre)
     const newBook = await prisma.book.create({
         data: {
             title,
             author,
-            publishedAt: publishedAt ? new Date(publishedAt) : null,
-            genre: [genre],
+            genre: genre,
             pages: pages,
-            reserved: []
+            reserved: [],
+            description: description,
         },
     });
 
@@ -231,7 +204,7 @@ export async function PUT(request: NextRequest) {
     const { title, author, publishedAt, genre, pages, userId } = await request.json();
     console.log("request", userId)
 
-    if(userId === null && book.userId !== Number(session.user.id)){
+    if (userId === null && book.userId !== Number(session.user.id)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -248,7 +221,7 @@ export async function PUT(request: NextRequest) {
                 ...(book.userId && userId !== null
                     ? {
                         reserved: { set: Array.from(new Set([...(book.reserved || []), userId])) }, // Ensure no duplicates
-                    } 
+                    }
                     : { userId }),
             },
         });
