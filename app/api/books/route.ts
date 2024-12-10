@@ -5,14 +5,14 @@ import { getServerSession } from 'next-auth/next'; // Import NextAuth's getServe
 // GET: Fetch books from the database by Id or query (Unprotected)
 export async function GET(request: NextRequest) {
 
-    // // Check the session
-    // const session = await getServerSession();
-    // if (!session) {
-    //     return NextResponse.json(
-    //         { error: 'Unauthorized' },
-    //         { status: 401 }
-    //     );
-    // }
+    // Check the session
+    const session = await getServerSession();
+    if (!session) {
+        return NextResponse.json(
+            { error: 'Unauthorized' },
+            { status: 401 }
+        );
+    }
 
     console.log("GET route called")
     // Parse query parameters
@@ -45,13 +45,12 @@ export async function GET(request: NextRequest) {
     // Search queries
     const title = url.searchParams.get('title') // Query param to filter title
     const author = url.searchParams.get('author') // Query param to filter author
-    let genres = url.searchParams.get('genre')
+    const genres = url.searchParams.get('genre')
     let genreList = []
     if (genres) {
         genreList = genres.split(',')
     }  // Query param to filter genres
     console.log("genres", genres)
-    const pages = url.searchParams.get('pages')
     const keyword = url.searchParams.get('keyword')
     const minPages = url.searchParams.get('minPages')
     const maxPages = url.searchParams.get('maxPages')
@@ -73,13 +72,13 @@ export async function GET(request: NextRequest) {
                         {
                             title: {
                                 contains: keyword,
-                                mode: 'insensitive',
+                                mode: 'insensitive' as const,
                             },
                         },
                         {
                             author: {
                                 contains: keyword,
-                                mode: 'insensitive',
+                                mode: 'insensitive' as const,
                             },
                         },
                     ],
@@ -89,7 +88,7 @@ export async function GET(request: NextRequest) {
                 ...(title ? [{
                     title: {
                         contains: title,
-                        mode: 'insensitive',
+                        mode: 'insensitive' as const,
                     },
                 }] : []),
 
@@ -97,7 +96,7 @@ export async function GET(request: NextRequest) {
                 ...(author ? [{
                     author: {
                         contains: author,
-                        mode: 'insensitive',
+                        mode: 'insensitive' as const,
                     },
                 }] : []),
 
@@ -121,10 +120,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     console.log("POST route called")
     // console.log(request)
-    // const session = await getServerSession({ req: request }); // Get session from NextAuth
-    // if (!session) {
-    //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
-    // }
+    const session = await getServerSession(); // Get session from NextAuth
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
+    }
 
     const { title, author, genre, pages, description } = await request.json();
     if (!title || !author || !genre || !pages || !description) {
@@ -150,10 +149,10 @@ export async function POST(request: NextRequest) {
 
 // DELETE: Delete book by Id (Protected)
 export async function DELETE(request: NextRequest) {
-    // const session = await getServerSession(); // Get session from NextAuth
-    // if (!session) {
-    //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
-    // }
+    const session = await getServerSession(); // Get session from NextAuth
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
+    }
 
     // Parse query parameters to get the book ID
     const url = new URL(request.url);
