@@ -7,6 +7,14 @@ Web Server programming with an application framework
 
 TTC8430-3005
 
+Link to externally hosted website
+https://jamk-library-o611bk2lp-arthurstruiks-projects.vercel.app/
+Admin account: arthur@gmail.com
+password: arthur
+
+Test account: test@gmail.com
+password: arthur
+
 ## Overview of the Project
 The JAMK Library App is a full-stack application designed to manage a library system. The application allows users to register, log in, search for books, borrow books, and reserve books. The primary problem it solves is the efficient management of library resources and user interactions.
 
@@ -19,12 +27,14 @@ The application follows a client-server architecture with the following componen
 - __Database:__ PostgreSQL is used as the relational database to store user and book information.
 - __Client-Server Interaction__: The client communicates with the server through RESTful API endpoints. The server processes the requests, interacts with the database, and sends responses back to the client.
 - __Database Relations__: The database schema includes tables for User, Book, and Session. The User table stores user information, the Book table stores book details, and the Session table manages user sessions.
+- __Hosting__: The application is hosted on Vercel, providing seamless deployment and scalability for the web server and client-side components.
 
 ### Technologies and Frameworks
 - __Next.js__: Chosen for its server-side rendering capabilities and seamless integration with React.
 - __React:__ Used for building the user interface due to its component-based architecture and reusability.
 - __PostgreSQL__: Chosen for its robustness, scalability, and support for complex queries.
 - __Auth.js__: Utilized for handling user authentication, providing secure login and registration functionalities.
+- __Vercel__: Used for hosting the application, providing seamless deployment and scalability for both the web server and client-side components.
 
 ### API Endpoints
 - __GET /api/books__: Fetches a list of books based on query parameters such as title, author, genre, and page range.
