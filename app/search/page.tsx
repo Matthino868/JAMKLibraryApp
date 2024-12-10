@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
+import Filters from '../../components/Filters';
 import Image from 'next/image';
 import '../slider.css';
-
+import { FiHome, FiSearch, FiFilter } from 'react-icons/fi';
+import { CgClose } from "react-icons/cg";
+import BookThumb from '@/components/BookThumb';
 interface Book {
     id: number;
     title: string;
@@ -37,6 +40,8 @@ export default function SearchPage() {
     const [minPages, setMinPages] = useState(0);
     const [maxPages, setMaxPages] = useState(2000);
     const [selectedBook, setSelectedBook] = useState(null);
+
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const handleGenreChange = (genre: string) => {
         setSelectedGenres((prevSelectedGenres) =>
@@ -83,104 +88,103 @@ export default function SearchPage() {
 
     return (
         <div>
-            <div className='bg-purple-800 text-white p-4 flex justify-between items-center'>
-                <div className="flex items-center justify-start">
-                    <Image src="/images/logo1x.png" alt="Logo" className="w-20 h-12 mr-2" width={764} height={462} />
-                    <button className="bg-transparent border text-white-800 px-4 py-2 rounded-md hover:bg-white hover:text-purple-800" onClick={() => window.location.href = '/homepage'}>Home</button>
+            <div className='bg-[#0D004C] sticky top-0 text-white p-4 flex justify-between items-center'>
+                {/* Left Section */}
+                <div className="flex items-center justify-start gap-2">
+                    {/* Hide logo on small screens */}
+                    <Image
+                        src="/images/logo1x.png"
+                        alt="Library logo"
+                        className="hidden sm:block w-20 h-12 mr-2"
+                        width={764}
+                        height={462}
+                    />
+                    <button
+                        className="bg-transparent border text-white-800 p-2 rounded-md hover:bg-white hover:text-[#0D004C]"
+                        onClick={() => window.location.href = '/homepage'}
+                    >
+                        <FiHome size={24} />
+                    </button>
                 </div>
+
+                {/* Right Section */}
                 <div className="flex items-center justify-end">
-                    <input type="text" className="p-2 rounded-md text-black mr-4"
+                    <input
+                        type="text"
+                        className="p-2 rounded-md text-black mr-4"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search Titles, Authors, etc..."
                     />
-                    <button className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-pink-800" onClick={handleSearch}>Search</button>
+                    <button
+                        className="bg-pink-500 text-white p-2 rounded-md hover:bg-white hover:text-pink-800"
+                        onClick={handleSearch}
+                    >
+                        <FiSearch size={24} />
+                    </button>
                 </div>
             </div>
-            <div className="flex ml-6 mr-6">
-                <div className="flex flex-col space-y-4 w-3/4">
+
+            <div className="flex ml-6 mr-6 overflow-y-auto">
+                <div className="flex flex-col space-y- w-full md:w-3/4 ">
                     {books.map((book, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-white shadow-lg rounded-md">
-                            <div className="flex items-center space-x-4">
-                                <Image src={`https://placehold.co/64x96/lightgrey/black?text=${encodeURIComponent(book.title)}`} alt="Book cover" className="w-16 h-24 object-cover" width={64} height={96} />
-                                <div>
-                                    <h3 className="font-semibold text-gray-600">{book.title}</h3>
-                                    <p className="text-sm text-gray-600">{book.author}</p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <div>
-                                    <p className="text-sm text-gray-600">
-                                        {book.genre.map((genre, index) => (
-                                            <span key={index}>
-                                                {index > 0 ? ', ' : ''}{genre.charAt(0).toUpperCase() + genre.slice(1)}
-                                            </span>
-                                        ))}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Due date: 29 Sept. 2024</p>
-                                    <button className="bg-pink-500 text-white px-4 py-2 mt-2 rounded-md" onClick={() => handleBookClick(book)}>View details</button>
-                                </div>
-                            </div>
+                        <div key={index}>
+                            <BookThumb book={book} handleBookClick={handleBookClick} />
                         </div>
                     ))}
                     <Modal isOpen={!!selectedBook} onClose={closeModal}>
                         {selectedBook && <BookDetails book={selectedBook} />}
                     </Modal>
                 </div>
-                <div className="w-1/4 ml-6">
-                    <div className="p-4 bg-white shadow-lg rounded-md">
-                        <h1 className="font-semibold text-gray-600 text-xl">Filters</h1>
-                        <div>
-                            <p>Search by Title</p>
-                            <input
-                                type="text"
-                                className="p-2 rounded-md text-black w-full border border-grey-800"
-                                placeholder="Enter book title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <p>Search by Author</p>
-                            <input
-                                type="text"
-                                className="p-2 rounded-md text-black w-full border border-grey-800"
-                                placeholder="Enter author"
-                                value={author}
-                                onChange={(e) => setAuthor(e.target.value)}
-                            />
-                        </div>
-                        <div className="slidecontainer">
-                            <p>No. min pages:</p>
-                            <div className="flex items-center justify-between">
-                                <input type="range" min="1" max="2000" value={minPages} onChange={(e) => setMinPages(Number(e.target.value))} />
-                                <p>{minPages}</p>
-                            </div>
-                            <p>No. max pages:</p>
-                            <div className="flex items-center justify-between">
-                                <input type="range" min="1" max="2000" value={maxPages} onChange={(e) => setMaxPages(Number(e.target.value))} />
-                                <p>{maxPages}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <p>Genres:</p>
-                            <ul className="space-y-2 mt-2">
-                                {Object.values(Genre).map((genre) => (
-                                    <li key={genre} className="flex items-center space-x-2">
-                                        <input type="checkbox" id={genre} name={genre} className="form-checkbox h-4 w-4 text-pink-500"
-                                            checked={selectedGenres.includes(genre)}
-                                            onChange={() => handleGenreChange(genre)} />
-                                        <label htmlFor={genre} className="text-gray-600 capitalize">{genre}</label>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                <div className="w-1/4 ml-6 hidden md:block">
+                    <Filters
+                        title={title}
+                        setTitle={setTitle}
+                        author={author}
+                        setAuthor={setAuthor}
+                        minPages={minPages}
+                        setMinPages={setMinPages}
+                        maxPages={maxPages}
+                        setMaxPages={setMaxPages}
+                        selectedGenres={selectedGenres}
+                        handleGenreChange={handleGenreChange}
+                    />
+                </div>
+            </div>
+            {/* Floating Action Button */}
+            <button
+                className="md:hidden fixed bottom-8 right-8 bg-[#0D004C] text-white p-4 rounded-md shadow-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+            >
+                <FiFilter size={24} />
+            </button>
+
+            {/* Filter Drawer */}
+            {isFilterOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50">
+                    <div className="flex flex-col items-end bg-[#0D004C] w-2/3 sm:w-2/3 h-full p-4 fixed right-0">
+                        <button
+                            onClick={() => setIsFilterOpen(false)}
+                            className="text-white text-2xl justify-center items-center flex p-2 mb-2 rounded-md hover:bg-pink-600"
+                        >
+                            <CgClose size={24} />
+                        </button>
+                        <Filters
+                            title={title}
+                            setTitle={setTitle}
+                            author={author}
+                            setAuthor={setAuthor}
+                            minPages={minPages}
+                            setMinPages={setMinPages}
+                            maxPages={maxPages}
+                            setMaxPages={setMaxPages}
+                            selectedGenres={selectedGenres}
+                            handleGenreChange={handleGenreChange}
+                        />
                         <button className="bg-pink-500 text-white px-4 py-2 mt-2 rounded-md" onClick={handleSearch}> Apply filters</button>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
