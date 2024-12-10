@@ -8,7 +8,8 @@ Web Server programming with an application framework
 TTC8430-3005
 
 Link to externally hosted website
-https://jamk-library-o611bk2lp-arthurstruiks-projects.vercel.app/
+https://jamk-library-app-two.vercel.app/login
+
 Admin account: arthur@gmail.com
 password: arthur
 
