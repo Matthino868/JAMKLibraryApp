@@ -10,12 +10,14 @@ const BookDetails = ({ book }) => {
   const handleBook = async (userId) => {
     console.log("Borrowing book", book.title, book.id);
     console.log("userId", userId);
+    const payload = { userId: userId !== null ? userId : null };
+    console.log("payload", payload);
     await fetch(`/api/books?bookId=${book.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId: userId !== null ? Number(userId) : null }),
+      body: JSON.stringify(payload),
     })
       .then(response => response.json())
       .then(data => {
@@ -69,9 +71,15 @@ const BookDetails = ({ book }) => {
           </p>
         </div>
 
+        {/* ID Section */}
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-gray-700">ID</h3>
+          <p className="text-gray-600">{book.id}</p>
+        </div>
+
         {/* Action Buttons */}
         <div className="mt-6 flex justify-end">
-          {book.userId === Number(session.user.id) ? (
+          {book.userId === session.user.id ? (
             <Button text="Hand in Book" onClick={() => handleBook(null)} />
           ) : !book.userId ? (
             <Button text="Borrow Book" onClick={() => handleBook(session.user.id)} />

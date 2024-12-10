@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     // If an `id` is provided, fetch that specific book
     if (bookId) {
         const book = await prisma.book.findUnique({
-            where: { id: Number(bookId) },
+            where: { id: bookId },
         });
 
         if (book) {
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     // If a `userId` is provided, fetch books for that specific user
     if (userId) {
         const userBooks = await prisma.book.findMany({
-            where: { userId: Number(userId) },
+            where: { userId: userId },
         });
 
         return NextResponse.json(userBooks);
@@ -150,10 +150,10 @@ export async function POST(request: NextRequest) {
 
 // DELETE: Delete book by Id (Protected)
 export async function DELETE(request: NextRequest) {
-    const session = await getServerSession(); // Get session from NextAuth
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
-    }
+    // const session = await getServerSession(); // Get session from NextAuth
+    // if (!session) {
+    //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
+    // }
 
     // Parse query parameters to get the book ID
     const url = new URL(request.url);
@@ -167,7 +167,7 @@ export async function DELETE(request: NextRequest) {
     try {
         // Attempt to delete the book with the given ID
         const deletedBook = await prisma.book.delete({
-            where: { id: Number(bookId) },
+            where: { id: bookId },
         });
 
         // Return success response if deletion is successful
@@ -181,6 +181,7 @@ export async function DELETE(request: NextRequest) {
 // PUT: Update a book by Id (Protected)
 export async function PUT(request: NextRequest) {
     const session = await getServerSession(); // Get session from NextAuth
+    console.log("session", session)
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
     }
@@ -196,22 +197,18 @@ export async function PUT(request: NextRequest) {
 
     // Check if book is already borrowed
     const book = await prisma.book.findUnique({
-        where: { id: Number(bookId) },
+        where: { id: bookId },
     });
     if (!book) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
     }
     const { title, author, publishedAt, genre, pages, userId } = await request.json();
     console.log("request", userId)
-
-    if (userId === null && book.userId !== Number(session.user.id)) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    console.log("book", book)
 
     try {
-        // Attempt to update the book with the given ID
-        const updatedBook = await prisma.book.update({
-            where: { id: Number(bookId) },
+        const payload = {
+            where: { id: bookId },
             data: {
                 ...(title && { title }),
                 ...(author && { author }),
@@ -224,12 +221,15 @@ export async function PUT(request: NextRequest) {
                     }
                     : { userId }),
             },
-        });
+        }
+        console.log("payload", payload)
+        // Attempt to update the book with the given ID
+        const updatedBook = await prisma.book.update(payload);
 
         // Return success response if update is successful
         return NextResponse.json({ message: 'Book updated successfully', updatedBook });
-    } catch (error) {
-        console.log('Error updating book:', error);
+    } catch {
+        // console.log('Error updating book:', error);
         return NextResponse.json({ error: 'Failed to update book' }, { status: 500 });
     }
 }

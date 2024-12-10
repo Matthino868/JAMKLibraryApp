@@ -8,19 +8,17 @@ import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
 
 interface Book {
-  id: number;
+  id: string;
   title: string;
   author: string;
-  userId: number;
-  reserved: number[];
+  userId: string;
+  reserved: string[];
 }
 
 export default function HomePage() {
   const { data: session } = useSession();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [borrowedBooks, setBorrowedBooks] = useState([]);
-
   const [selectedBook, setSelectedBook] = useState(null);
 
   // Fetch books from the API on component mount
@@ -98,10 +96,10 @@ export default function HomePage() {
 
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
-        {books.filter((book) => book.userId === Number(session?.user?.id)).length > 0 ? (
+        {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
           <ul className="space-y-2">
             {books
-              .filter((book) => book.userId === Number(session?.user?.id))
+              .filter((book) => book.userId === session?.user?.id)
               .map((book) => (
                 <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
                   <strong>{book.title}</strong> by {book.author}
@@ -113,10 +111,10 @@ export default function HomePage() {
         )}
 
         <h2 className="text-2xl font-bold mb-4">Reserved Books</h2>
-        {books.filter((book) => book.reserved?.includes(Number(session?.user?.id))).length > 0 ? (
+        {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
           <ul className="space-y-2">
             {books
-              .filter((book) => book.reserved?.includes(Number(session?.user?.id)))
+              .filter((book) => book.reserved?.includes(session?.user?.id))
               .map((book) => (
                 <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
                   <strong>{book.title}</strong> by {book.author}
