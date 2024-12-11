@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
 import BookThumb from '../../components/BookThumb';
+import Sidemenu from '../../components/Sidemenu';
 import { FiLogOut, FiMenu, FiSearch } from 'react-icons/fi';
 import { MdDarkMode, } from 'react-icons/md';
 
@@ -49,8 +50,8 @@ export default function HomePage() {
   const closeModal = () => {
     setSelectedBook(null);
   };
-
-  if (!session) {
+  console.log("Session", session);
+  if (session===null) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
         {/* Access Denied Message */}
@@ -84,8 +85,8 @@ export default function HomePage() {
 
         {/* Buttons for larger screens */}
         <div className="hidden md:flex items-center justify-start gap-4">
-          <h1 className="testclass">Welcome {session.user.name}</h1>
-          {session.user.admin && (
+          <h1 className="testclass">Welcome {session?.user.name}</h1>
+          {session?.user.admin && (
             <button
               onClick={() => window.location.href = '/testpage'}
               className="bg-transparent border text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C]"
@@ -126,125 +127,82 @@ export default function HomePage() {
 
       {/* Side menu for mobile screens */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={()=> setIsMenuOpen(false)}>
-          <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e)=>e.stopPropagation()}>
+        <Sidemenu session={session} setIsMenuOpen={setIsMenuOpen}  >
+          <button
+            onClick={() => window.location.href = '/search'}
+            className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
+          >
+            Search books
+          </button>
+          {session.user.admin && (
             <button
-              onClick={() => setIsMenuOpen(false)}
-              className="text-white absolute top-2 right-2 text-2xl"
+              onClick={() => window.location.href = '/testpage'}
+              className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
             >
-              &times;
-            </button>
-
-            {/* User Info */}
-            <div className="flex flex-col items-center justify-between h-full">
-              <div className="flex flex-col items-center">
-                <Image
-                  src={`https://placehold.co/320x320/lightgrey/black?text=${encodeURIComponent(session.user.name)}`}
-                  alt="Profile"
-                  className="w-40 h-40 rounded-full"
-                  width={96}
-                  height={96}
-                />
-                <h1 className="text-white text-2xl mt-4">{session.user.name}</h1>
-                <h2 className="text-gray-400 mb-4">{session.user.email}</h2>
-              </div>
-
-              {/* Menu Links */}
-              <div className="flex flex-col w-full gap-5">
-                <hr className="border-t border-white w-full" />
-                <button
-                  onClick={() => window.location.href = '/search'}
-                  className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                >
-                  Search books
-                </button>
-                {session.user.admin && (
-                  <button
-                    onClick={() => window.location.href = '/testpage'}
-                    className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                  >
-                    Admin Panel
-                  </button>
-                )}
-                <hr className="border-t border-white w-full" />
-              </div>
-
-              {/* Bottom Actions */}
-              <div className="flex justify-between items-center w-full mt-auto">
-                <button className="text-white hover:text-gray-300">
-                  <MdDarkMode size={32} />
-                </button>
-                <button
-                  onClick={async () => {
-                    const res = await signOut();
-                    console.log(res);
-                  }}
-                  className="bg-pink-500 text-white p-2 rounded-md hover:bg-white hover:text-pink-800 flex items-center justify-center transition"
-                >
-                  <FiLogOut size={24} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+              Admin Panel
+            </button >
+          )}
+        </Sidemenu >
       )}
 
-      {loading ? (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-          {/* Spinner */}
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#0D004C] border-opacity-75 mb-4"></div>
+      {
+        loading ? (
+          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+            {/* Spinner */}
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#0D004C] border-opacity-75 mb-4"></div>
 
-          {/* Loading Text */}
-          <p className="text-lg font-medium text-gray-700">Loading...</p>
-        </div>
-      ) :
-        (
-
-          <div className="container mx-auto">
-            { /* Main content */}
-            <h2 className="text-2xl font-bold my-4">Borrowed Books</h2>
-            {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
-              <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
-                {books
-                  .filter((book) => book.userId === session?.user?.id)
-                  .map((book, index) => (
-                    <div key={index}>
-                      <BookThumb book={book} handleBookClick={handleBookClick} />
-                    </div>
-                  ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">No borrowed books.</p>
-            )}
-
-            <h2 className="text-2xl font-bold my-4">Reserved Books</h2>
-            {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
-              <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
-                {books
-                  .filter((book) => book.reserved?.includes(session?.user?.id))
-                  .map((book, index) => (
-                    <div key={index}>
-                      <BookThumb book={book} handleBookClick={handleBookClick} />
-                    </div>
-                  ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">No reserved books...</p>
-            )}
-
-            <h2 className="text-2xl font-bold my-4">Available Books</h2>
-            <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
-              {books.map((book, index) => (
-                <div key={index}>
-                  <BookThumb book={book} handleBookClick={handleBookClick} />
-                </div>
-              ))}
-            </div>
-            <Modal isOpen={!!selectedBook} onClose={closeModal}>
-              {selectedBook && <BookDetails book={selectedBook} />}
-            </Modal>
+            {/* Loading Text */}
+            <p className="text-lg font-medium text-gray-700">Loading...</p>
           </div>
-        )}
+        ) :
+          (
+
+            <div className="container ml-[5%] ">
+              { /* Main content */}
+              <h2 className="text-2xl font-bold my-4">Borrowed Books</h2>
+              {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
+                <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+                  {books
+                    .filter((book) => book.userId === session?.user?.id)
+                    .map((book, index) => (
+                      <div key={index}>
+                        <BookThumb book={book} handleBookClick={handleBookClick} />
+                      </div>
+                    ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No borrowed books.</p>
+              )}
+
+              <h2 className="text-2xl font-bold my-4">Reserved Books</h2>
+              {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
+                <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+                  {books
+                    .filter((book) => book.reserved?.includes(session?.user?.id))
+                    .map((book, index) => (
+                      <div key={index}>
+                        <BookThumb book={book} handleBookClick={handleBookClick} />
+                      </div>
+                    ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No reserved books...</p>
+              )}
+
+              <h2 className="text-2xl font-bold my-4">Available Books</h2>
+              <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+                {books.map((book, index) => (
+                  <div key={index}>
+                    <BookThumb book={book} handleBookClick={handleBookClick} />
+                  </div>
+                ))}
+              </div>
+              <Modal isOpen={!!selectedBook} onClose={closeModal}>
+                {selectedBook && <BookDetails book={selectedBook} />}
+              </Modal>
+            </div>
+          )
+      }
 
     </>
   );

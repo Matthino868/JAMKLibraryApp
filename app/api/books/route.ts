@@ -127,6 +127,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { title, author, genre, pages, description } = await request.json();
+    
     if (!title || !author || !genre || !pages || !description) {
         return NextResponse.json({ error: 'Fields are missing' }, { status: 400 });
     }

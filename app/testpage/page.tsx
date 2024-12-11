@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { FiLogOut, FiSearch, FiHome, FiMenu } from 'react-icons/fi';
 import { MdDarkMode, } from 'react-icons/md';
 import { Genre } from '../../components/Filters';
+import Sidemenu from '../../components/Sidemenu';
+import Button from '../../components/Button';
 
 
 export default function Testpage() {
@@ -29,7 +31,7 @@ export default function Testpage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ title, author, pages, selectedGenres, description }),
+            body: JSON.stringify({ title, author, pages, genre: selectedGenres, description }),
         });
 
         if (response.ok) {
@@ -72,11 +74,19 @@ export default function Testpage() {
         );
     };
 
-    if (!session) {
+    if (session === null) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <p className="text-lg mb-4">Access Denied: You must be signed in to view this page</p>
-                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => window.location.href = '/login'}>Go to login page</button>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+                {/* Access Denied Message */}
+                <p className="text-lg font-medium text-gray-700 mb-4">Access Denied: You must be signed in to view this page</p>
+
+                {/* Go to Login Button */}
+                <button
+                    className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-white border border-pink-500 hover:text-pink-500 transition-colors duration-300"
+                    onClick={() => window.location.href = '/login'}
+                >
+                    Go to login page
+                </button>
             </div>
         );
     }
@@ -95,8 +105,8 @@ export default function Testpage() {
                 </div>
                 {/* Buttons for larger screens */}
                 <div className="hidden md:flex items-center justify-start gap-4">
-                    <h1 className="testclass">Welcome {session.user.name}</h1>
-                    {session.user.admin && (
+                    <h1 className="testclass">Welcome {session?.user.name}</h1>
+                    {session?.user.admin && (
                         <button
                             onClick={() => window.location.href = '/homepage'}
                             className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center"
@@ -135,67 +145,82 @@ export default function Testpage() {
             </div>
             {/* Side menu for mobile screens */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsMenuOpen(false)}>
-                    <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e) => e.stopPropagation()}>
+                <Sidemenu session={session} setIsMenuOpen={setIsMenuOpen}  >
+                    <button
+                        onClick={() => window.location.href = '/homepage'}
+                        className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C] transition"
+                    >
+                        Homepage
+                    </button>
+                    {session.user.admin && (
                         <button
-                            onClick={() => setIsMenuOpen(false)}
-                            className="text-white absolute top-2 right-2 text-2xl"
+                            onClick={() => window.location.href = '/search'}
+                            className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C] transition"
                         >
-                            &times;
+                            Search books
                         </button>
+                    )}</Sidemenu>
+                // <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsMenuOpen(false)}>
+                //     <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e) => e.stopPropagation()}>
+                //         <button
+                //             onClick={() => setIsMenuOpen(false)}
+                //             className="text-white absolute top-2 right-2 text-2xl"
+                //         >
+                //             &times;
+                //         </button>
 
-                        {/* User Info */}
-                        <div className="flex flex-col items-center justify-between h-full">
-                            <div className="flex flex-col items-center">
-                                <Image
-                                    src={`https://placehold.co/320x320/lightgrey/black?text=${encodeURIComponent(session.user.name)}`}
-                                    alt="Profile"
-                                    className="w-40 h-40 rounded-full"
-                                    width={96}
-                                    height={96}
-                                />
-                                <h1 className="text-white text-2xl mt-4">{session.user.name}</h1>
-                                <h2 className="text-gray-400 mb-4">{session.user.email}</h2>
-                            </div>
+                //         {/* User Info */}
+                //         <div className="flex flex-col items-center justify-between h-full">
+                //             <div className="flex flex-col items-center">
+                //                 <Image
+                //                     src={`https://placehold.co/320x320/lightgrey/black?text=${encodeURIComponent(session.user.name)}`}
+                //                     alt="Profile"
+                //                     className="w-40 h-40 rounded-full"
+                //                     width={96}
+                //                     height={96}
+                //                 />
+                //                 <h1 className="text-white text-2xl mt-4">{session.user.name}</h1>
+                //                 <h2 className="text-gray-400 mb-4">{session.user.email}</h2>
+                //             </div>
 
-                            {/* Menu Links */}
-                            <div className="flex flex-col w-full gap-5">
-                                <hr className="border-t border-white w-full" />
-                                <button
-                                    onClick={() => window.location.href = '/homepage'}
-                                    className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                                >
-                                    Homepage
-                                </button>
-                                {session.user.admin && (
-                                    <button
-                                        onClick={() => window.location.href = '/search'}
-                                        className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                                    >
-                                        Search books
-                                    </button>
-                                )}
-                                <hr className="border-t border-white w-full" />
-                            </div>
+                //             {/* Menu Links */}
+                //             <div className="flex flex-col w-full gap-5">
+                //                 <hr className="border-t border-white w-full" />
+                //                 <button
+                //                     onClick={() => window.location.href = '/homepage'}
+                //                     className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
+                //                 >
+                //                     Homepage
+                //                 </button>
+                //                 {session.user.admin && (
+                //                     <button
+                //                         onClick={() => window.location.href = '/search'}
+                //                         className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
+                //                     >
+                //                         Search books
+                //                     </button>
+                //                 )}
+                //                 <hr className="border-t border-white w-full" />
+                //             </div>
 
-                            {/* Bottom Actions */}
-                            <div className="flex justify-between items-center w-full mt-auto">
-                                <button className="text-white hover:text-gray-300">
-                                    <MdDarkMode size={32} />
-                                </button>
-                                <button
-                                    onClick={async () => {
-                                        const res = await signOut();
-                                        console.log(res);
-                                    }}
-                                    className="bg-pink-500 text-white p-2 rounded-md hover:bg-white hover:text-pink-800 flex items-center justify-center transition"
-                                >
-                                    <FiLogOut size={24} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                //             {/* Bottom Actions */}
+                //             <div className="flex justify-between items-center w-full mt-auto">
+                //                 <button className="text-white hover:text-gray-300">
+                //                     <MdDarkMode size={32} />
+                //                 </button>
+                //                 <button
+                //                     onClick={async () => {
+                //                         const res = await signOut();
+                //                         console.log(res);
+                //                     }}
+                //                     className="bg-pink-500 text-white p-2 rounded-md hover:bg-white hover:text-pink-800 flex items-center justify-center transition"
+                //                 >
+                //                     <FiLogOut size={24} />
+                //                 </button>
+                //             </div>
+                //         </div>
+                //     </div>
+                // </div>
             )}
             <div className="flex flex-col sm:flex-row ml-6 mr-6 gap-10">
                 <div className='sm:w-1/2'>
@@ -252,17 +277,12 @@ export default function Testpage() {
                                 ))}
                             </ul>
                         </div>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                            Add Book
-                        </button>
+                        <Button onClick={handleAddBook} text={"Add Book"} />
                     </form>
                 </div>
                 <div className='sm:w-1/2'>
                     <h3 className="text-xl font-semibold mt-8 mb-4">Delete a book</h3>
-                    <div>
+                    <div className='mb-4'>
                         <label className="block text-sm font-medium">Book ID:</label>
                         <input
                             type="text"
@@ -272,13 +292,7 @@ export default function Testpage() {
                             className="mt-1 p-2 border rounded w-full"
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className="px-4 py-2 mt-5 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        onClick={handleDeleteBook}
-                    >
-                        Delete Book
-                    </button>
+                    <Button onClick={handleDeleteBook} text={"Delete Book"} />
                 </div>
             </div>
         </div>
