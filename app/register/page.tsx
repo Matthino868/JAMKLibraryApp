@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import logo from '../../public/images/logo1x.png';
 
 export default function RegisterPage() {
     const router = useRouter();
     const [data, setData] = useState({ name: '', email: '', password: '' });
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showBubble, setShowBubble] = useState(false);
 
     const registerUser = async (event) => {
         event.preventDefault();
@@ -16,19 +21,27 @@ export default function RegisterPage() {
                 body: JSON.stringify({ data }),
             });
         const userInfo = await response.json();
-        console.log(userInfo);
-        router.push('/login');
-    };
-
+        if (response.ok) {
+            console.log(userInfo);
+            router.push('/login');
+        }
+        else {
+            console.log(userInfo.error);
+            // setErrorPopUp(true);
+            setErrorMessage(userInfo.error);
+            setShowBubble(true);
+            // setTimeout(() => setErrorMessage(null), 3000);
+            setTimeout(() => setShowBubble(false), 3000);
+        }
+    }
     return (
         <>
+
+
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm  p-6 rounded-md">
-                    <img
-                        alt="Your Company"
-                        src="/images/logo1x.png"
-                        className="mx-auto h-100 w-auto bg-[#0d004c] p-2 rounded-md"
-                    />
+                    <Image placeholder='blur' src={logo} alt="Your Company" className="mx-auto h-100 w-auto bg-[#0d004c] p-2 rounded-md" width={764}
+                        height={462} />
                     <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
                         Sign up for an account
                     </h2>
@@ -104,6 +117,14 @@ export default function RegisterPage() {
                             </button>
                         </div>
                     </form>
+                    {errorMessage && (
+                        <div
+                            className={` mt-4 p-4 bg-red-300 text-red-00 rounded-md text-center transform shadow-lg z-50 transition-opacity duration-300 ${showBubble ? 'opacity-100' : 'opacity-0'
+                                }`}
+                        >
+                            <strong>Error:</strong> {errorMessage}
+                        </div>
+                    )}
 
 
                 </div>

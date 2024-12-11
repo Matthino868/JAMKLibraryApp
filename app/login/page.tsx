@@ -8,7 +8,8 @@ import '../globals.css';
 export default function LoginPage() {
     const router = useRouter();
     const [data, setData] = useState({ email: '', password: '' });
-    const [errorMessage, setErrorMessage] = useState(false);
+
+    const [showBubble, setShowBubble] = useState(false);
 
     const loginUser = async (event) => {
         event.preventDefault();
@@ -22,10 +23,9 @@ export default function LoginPage() {
             router.push('/homepage');
         }
         else {
-            setErrorMessage(true); // Show error message box
-            setTimeout(() => {
-                setErrorMessage(false); // Hide it after 3 seconds
-            }, 3000);
+            console.log(result)
+            setShowBubble(true);
+            setTimeout(() => setShowBubble(false), 3000);
         }
     };
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
                     </form>
 
                     {/* Error message box */}
-                    {errorMessage && (
+                    {showBubble && (
                         <div className="mt-4 p-4 bg-red-300 text-red-00 rounded-md text-center transition">
                             Invalid email or password. Please try again.
                         </div>

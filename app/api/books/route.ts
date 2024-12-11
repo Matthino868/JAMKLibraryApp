@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
 import prisma from '../../../lib/prisma';
-import { getServerSession } from 'next-auth/next'; // Import NextAuth's getServerSession
+import { getServerSession } from 'next-auth/next';
 
-// GET: Fetch books from the database by Id or query (Unprotected)
+// GET: Fetch books from the database by Id or query
 export async function GET(request: NextRequest) {
 
     // Check the session
@@ -13,8 +13,9 @@ export async function GET(request: NextRequest) {
             { status: 401 }
         );
     }
-
+    
     console.log("GET route called")
+
     // Parse query parameters
     const url = new URL(request.url);
     const bookId = url.searchParams.get('bookId');
@@ -41,16 +42,16 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(userBooks);
     }
-    // console.log("url", url.searchParams)
+
     // Search queries
     const title = url.searchParams.get('title') // Query param to filter title
     const author = url.searchParams.get('author') // Query param to filter author
     const genres = url.searchParams.get('genre')
     let genreList = []
     if (genres) {
-        genreList = genres.split(',')
-    }  // Query param to filter genres
-    console.log("genres", genres)
+        genreList = genres.split(',') // Query param to filter genres
+    }  
+    console.log("Genres", genres)
     const keyword = url.searchParams.get('keyword')
     const minPages = url.searchParams.get('minPages')
     const maxPages = url.searchParams.get('maxPages')
@@ -116,10 +117,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(books);
 }
 
-// POST: Create a new book (Protected)
+// POST: Create a new book
 export async function POST(request: NextRequest) {
     console.log("POST route called")
-    // console.log(request)
+
     const session = await getServerSession(); // Get session from NextAuth
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
@@ -130,7 +131,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Fields are missing' }, { status: 400 });
     }
 
-    console.log("genre", genre)
     const newBook = await prisma.book.create({
         data: {
             title,
@@ -147,8 +147,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newBook);
 }
 
-// DELETE: Delete book by Id (Protected)
+// DELETE: Delete book by Id
 export async function DELETE(request: NextRequest) {
+    console.log("DELETE route called")
+
     const session = await getServerSession(); // Get session from NextAuth
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Check if the user is logged in
@@ -171,14 +173,15 @@ export async function DELETE(request: NextRequest) {
 
         // Return success response if deletion is successful
         return NextResponse.json({ message: 'Book deleted successfully', deletedBook });
-    } catch (error) {
-        console.error('Error deleting book:', error);
+    } catch {
         return NextResponse.json({ error: 'Failed to delete book' }, { status: 500 });
     }
 }
 
-// PUT: Update a book by Id (Protected)
+// PUT: Update a book by Id
 export async function PUT(request: NextRequest) {
+    console.log("PUT route called")
+
     const session = await getServerSession(); // Get session from NextAuth
     console.log("session", session)
     if (!session) {
@@ -201,9 +204,11 @@ export async function PUT(request: NextRequest) {
     if (!book) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
     }
+
     const { title, author, publishedAt, genre, pages, userId } = await request.json();
-    console.log("request", userId)
-    console.log("book", book)
+    if (!title && !author && !publishedAt && !genre && !pages && !userId) {
+        return NextResponse.json({ error: 'Fields are missing' }, { status: 400 });
+    }
 
     try {
         const payload = {
@@ -221,14 +226,13 @@ export async function PUT(request: NextRequest) {
                     : { userId }),
             },
         }
-        console.log("payload", payload)
+
         // Attempt to update the book with the given ID
         const updatedBook = await prisma.book.update(payload);
 
         // Return success response if update is successful
         return NextResponse.json({ message: 'Book updated successfully', updatedBook });
     } catch {
-        // console.log('Error updating book:', error);
         return NextResponse.json({ error: 'Failed to update book' }, { status: 500 });
     }
 }
