@@ -18,7 +18,7 @@ const BookThumb = ({ book, handleBookClick }) => {
                         <h3 className="font-semibold text-gray-600">{book.title}</h3>
                         <p className="text-sm text-gray-600">{book.author}</p>
                     </div>
-                    <div className="hidden sm:block px-4 max-h-10 overflow-hidden">
+                    <div className="hidden sm:block px-4 max-h-[5rem] overflow-hidden">
                         <p className="">{book.description}</p>
                     </div>
                 </div>

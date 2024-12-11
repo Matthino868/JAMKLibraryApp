@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
+import BookThumb from '../../components/BookThumb';
 import { FiLogOut, FiMenu, FiSearch } from 'react-icons/fi';
 import { MdDarkMode, } from 'react-icons/md';
 
@@ -69,7 +70,7 @@ export default function HomePage() {
   return (
     <>
       {/* Top bar */}
-      <div className="bg-[#0D004C] text-white p-4 flex justify-between items-center">
+      <div className="bg-[#0D004C] sticky top-0 text-white p-4 flex justify-between items-center">
         {/* Left section */}
         <div className={`flex items-center justify-start flex-grow`}>
           <Image
@@ -125,8 +126,8 @@ export default function HomePage() {
 
       {/* Side menu for mobile screens */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-          <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={()=> setIsMenuOpen(false)}>
+          <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e)=>e.stopPropagation()}>
             <button
               onClick={() => setIsMenuOpen(false)}
               className="text-white absolute top-2 right-2 text-2xl"
@@ -199,50 +200,46 @@ export default function HomePage() {
       ) :
         (
 
-          <div className="container mx-auto p-4">
+          <div className="container mx-auto">
             { /* Main content */}
-            <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
+            <h2 className="text-2xl font-bold my-4">Borrowed Books</h2>
             {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
-              <ul className="space-y-2">
+              <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
                 {books
                   .filter((book) => book.userId === session?.user?.id)
-                  .map((book) => (
-                    <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                      <strong>{book.title}</strong> by {book.author}
-                    </li>
+                  .map((book, index) => (
+                    <div key={index}>
+                      <BookThumb book={book} handleBookClick={handleBookClick} />
+                    </div>
                   ))}
               </ul>
             ) : (
               <p className="text-gray-500">No borrowed books.</p>
             )}
 
-            <h2 className="text-2xl font-bold mb-4">Reserved Books</h2>
+            <h2 className="text-2xl font-bold my-4">Reserved Books</h2>
             {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
-              <ul className="space-y-2">
+              <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
                 {books
                   .filter((book) => book.reserved?.includes(session?.user?.id))
-                  .map((book) => (
-                    <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                      <strong>{book.title}</strong> by {book.author}
-                    </li>
+                  .map((book, index) => (
+                    <div key={index}>
+                      <BookThumb book={book} handleBookClick={handleBookClick} />
+                    </div>
                   ))}
               </ul>
             ) : (
               <p className="text-gray-500">No reserved books...</p>
             )}
 
-            <h2 className="text-2xl font-bold mb-4">Available Books</h2>
-            {books.length > 0 ? (
-              <ul className="space-y-2">
-                {books.map((book) => (
-                  <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                    <strong>{book.title}</strong> by {book.author}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">No books available.</p>
-            )}
+            <h2 className="text-2xl font-bold my-4">Available Books</h2>
+            <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+              {books.map((book, index) => (
+                <div key={index}>
+                  <BookThumb book={book} handleBookClick={handleBookClick} />
+                </div>
+              ))}
+            </div>
             <Modal isOpen={!!selectedBook} onClose={closeModal}>
               {selectedBook && <BookDetails book={selectedBook} />}
             </Modal>

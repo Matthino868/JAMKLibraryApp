@@ -161,8 +161,9 @@ export default function SearchPage() {
 
             {/* Filter Drawer */}
             {isFilterOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50">
-                    <div className="flex flex-col items-end bg-[#0D004C] w-2/3 sm:w-2/3 h-full p-4 fixed right-0">
+                <div className="fixed inset-0 bg-black bg-opacity-50" onClick={()=>setIsFilterOpen(false)}>
+                    <div className="flex flex-col items-end bg-[#0D004C] w-2/3 sm:w-2/3 h-full p-4 fixed right-0"
+                    onClick={(e)=>e.stopPropagation()}>
                         <button
                             onClick={() => setIsFilterOpen(false)}
                             className="text-white text-2xl justify-center items-center flex p-2 mb-2 rounded-md hover:bg-pink-600"
