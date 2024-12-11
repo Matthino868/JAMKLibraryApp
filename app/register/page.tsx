@@ -35,10 +35,18 @@ export default function RegisterPage() {
         }
     }
     return (
-        <>
 
-
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat">
+            <div className="absolute inset-0 z-0 ">
+                <img
+                    className='object-cover w-full h-full'
+                    src='images/background/background.png'
+                    srcSet='images/background/background@2x.png 1500w, images/background/background.png 1000w, images/background/background@0,5x.png 500w'
+                    sizes='(min-width: 960px) 960px, 100vw'
+                    alt="Responsive Background"
+                />
+            </div>
+            <div className="flex flex-col justify-start px-6  lg:px-8 bg-white rounded-xl py-10 z-10">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm  p-6 rounded-md">
                     <Image placeholder='blur' src={logo} alt="Your Company" className="mx-auto h-100 w-auto bg-[#0d004c] p-2 rounded-md" width={764}
                         height={462} />
@@ -47,7 +55,7 @@ export default function RegisterPage() {
                     </h2>
                 </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <form action="#" onSubmit={registerUser} method="POST" className="space-y-6">
                         <div>
                             <div className="flex items-center justify-between">
@@ -129,7 +137,6 @@ export default function RegisterPage() {
 
                 </div>
             </div>
-        </>
-
+        </div>
     );
 }

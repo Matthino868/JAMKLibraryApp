@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import BookDetails from '../../components/BookDetails';
-import { FiLogOut, FiMenu, FiSearch} from 'react-icons/fi';
-import { MdDarkMode,  } from 'react-icons/md';
+import { FiLogOut, FiMenu, FiSearch } from 'react-icons/fi';
+import { MdDarkMode, } from 'react-icons/md';
 
 interface Book {
   id: string;
@@ -49,22 +49,23 @@ export default function HomePage() {
     setSelectedBook(null);
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <p className="text-lg mb-4">Loading...</p>
-      </div>
-    )
-  }
-  // console.log("session", session)
   if (!session) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <p className="text-lg mb-4">Access Denied: You must be signed in to view this page</p>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => window.location.href = '/login'}>Go to login page</button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+        {/* Access Denied Message */}
+        <p className="text-lg font-medium text-gray-700 mb-4">Access Denied: You must be signed in to view this page</p>
+
+        {/* Go to Login Button */}
+        <button
+          className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-white border border-pink-500 hover:text-pink-500 transition-colors duration-300"
+          onClick={() => window.location.href = '/login'}
+        >
+          Go to login page
+        </button>
       </div>
     );
   }
+
   return (
     <>
       {/* Top bar */}
@@ -95,7 +96,7 @@ export default function HomePage() {
             onClick={() => window.location.href = '/search'}
             className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center"
           >
-            <FiSearch size={24}/>
+            <FiSearch size={24} />
           </button>
           <button className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center">
             <MdDarkMode size={24} />
@@ -187,53 +188,67 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="container mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
-        {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
-          <ul className="space-y-2">
-            {books
-              .filter((book) => book.userId === session?.user?.id)
-              .map((book) => (
-                <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                  <strong>{book.title}</strong> by {book.author}
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No borrowed books.</p>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+          {/* Spinner */}
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#0D004C] border-opacity-75 mb-4"></div>
+
+          {/* Loading Text */}
+          <p className="text-lg font-medium text-gray-700">Loading...</p>
+        </div>
+      ) :
+        (
+
+          <div className="container mx-auto p-4">
+            { /* Main content */}
+            <h2 className="text-2xl font-bold mb-4">Borrowed Books</h2>
+            {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
+              <ul className="space-y-2">
+                {books
+                  .filter((book) => book.userId === session?.user?.id)
+                  .map((book) => (
+                    <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
+                      <strong>{book.title}</strong> by {book.author}
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No borrowed books.</p>
+            )}
+
+            <h2 className="text-2xl font-bold mb-4">Reserved Books</h2>
+            {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
+              <ul className="space-y-2">
+                {books
+                  .filter((book) => book.reserved?.includes(session?.user?.id))
+                  .map((book) => (
+                    <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
+                      <strong>{book.title}</strong> by {book.author}
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No reserved books...</p>
+            )}
+
+            <h2 className="text-2xl font-bold mb-4">Available Books</h2>
+            {books.length > 0 ? (
+              <ul className="space-y-2">
+                {books.map((book) => (
+                  <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
+                    <strong>{book.title}</strong> by {book.author}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No books available.</p>
+            )}
+            <Modal isOpen={!!selectedBook} onClose={closeModal}>
+              {selectedBook && <BookDetails book={selectedBook} />}
+            </Modal>
+          </div>
         )}
 
-        <h2 className="text-2xl font-bold mb-4">Reserved Books</h2>
-        {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
-          <ul className="space-y-2">
-            {books
-              .filter((book) => book.reserved?.includes(session?.user?.id))
-              .map((book) => (
-                <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                  <strong>{book.title}</strong> by {book.author}
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No reserved books...</p>
-        )}
-
-        <h2 className="text-2xl font-bold mb-4">Available Books</h2>
-        {books.length > 0 ? (
-          <ul className="space-y-2">
-            {books.map((book) => (
-              <li key={book.id} className="p-4 border rounded shadow-sm" onClick={() => handleBookClick(book)}>
-                <strong>{book.title}</strong> by {book.author}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No books available.</p>
-        )}
-        <Modal isOpen={!!selectedBook} onClose={closeModal}>
-          {selectedBook && <BookDetails book={selectedBook} />}
-        </Modal>
-      </div>
     </>
   );
 }
