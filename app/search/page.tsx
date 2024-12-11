@@ -126,7 +126,7 @@ export default function SearchPage() {
             </div>
 
             <div className="flex ml-6 mr-6 overflow-y-auto">
-                <div className="flex flex-col space-y- w-full md:w-3/4 ">
+                <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
                     {books.map((book, index) => (
                         <div key={index}>
                             <BookThumb book={book} handleBookClick={handleBookClick} />
@@ -153,7 +153,7 @@ export default function SearchPage() {
             </div>
             {/* Floating Action Button */}
             <button
-                className="md:hidden fixed bottom-8 right-8 bg-[#0D004C] text-white p-4 rounded-md shadow-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="md:hidden fixed bottom-4 right-4 bg-[#0D004C] text-white p-3 rounded-md shadow-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
                 <FiFilter size={24} />
