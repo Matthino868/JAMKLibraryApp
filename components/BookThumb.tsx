@@ -1,11 +1,6 @@
 import Image from 'next/image'
-import { useState,} from 'react';
 
 const BookThumb = ({ book, handleBookClick, darkMode }) => {
-    const [_darkMode, _] = useState(darkMode)
-    // console.log(_darkMode)
-    console.log(darkMode)
-    // _(darkMode)
     return (
         <div className={`flex flex-row  items-center justify-between p-4  shadow-lg rounded-md hover:shadow-2xl ${ darkMode ? `hover:bg-gray-800` :  `hover:bg-gray-200`}  transition-shadow duration-300 ${darkMode ? `bg-[#202124]` : `bg-white`}`} onClick={() => handleBookClick(book)}>
             {/* Book Cover */}

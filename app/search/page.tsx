@@ -95,10 +95,10 @@ export default function SearchPage() {
                 </div>
 
                 {/* Right Section */}
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end ">
                     <input
                         type="text"
-                        className="p-2 rounded-md text-black mr-4"
+                        className="p-2 rounded-md text-black mr-4 "
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search Titles, Authors, etc..."
@@ -116,7 +116,7 @@ export default function SearchPage() {
                 <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
                     {books.map((book, index) => (
                         <div key={index}>
-                            <BookThumb book={book} handleBookClick={handleBookClick} />
+                            <BookThumb book={book} handleBookClick={handleBookClick} darkMode={false}/>
                         </div>
                     ))}
                     <Modal isOpen={!!selectedBook} onClose={closeModal}>

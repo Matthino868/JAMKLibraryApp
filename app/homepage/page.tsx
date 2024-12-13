@@ -102,7 +102,7 @@ export default function HomePage() {
           >
             <FiSearch size={24} />
           </button>
-          <button className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center"
+          <button className={`border p-2 rounded-md ${darkMode ? `bg-white text-[#0D004C]`: `bg-[#0D004C] text-white`} hover:bg-gray-200 hover:text-[#0D004C] flex items-center justify-center`}
             onClick={() => setDarkMode(!darkMode)}>
             <MdDarkMode size={24} />
           </button>
@@ -160,7 +160,7 @@ export default function HomePage() {
         ) :
           (
 
-            <div className={`flex flex-col px-5 gap-5 w-full ${darkMode ? `bg-black` : `bg-white`}`}>
+            <div className={`flex flex-col px-5 gap-5  min-h-screen w-full ${darkMode ? `bg-black` : `bg-white`}`}>
               { /* Main content */}
               <div className=''>
                 <h2 className={`text-2xl font-bold my-4 ${darkMode ? `text-white` : `text-black`}`}>Borrowed Books</h2>
