@@ -5,7 +5,7 @@ import { signOut } from 'next-auth/react';
 import { Session } from 'next-auth';
 
 
-const Sidemenu = ({ children, session, setIsMenuOpen }: { children: React.ReactNode, session: Session, setIsMenuOpen: (value: boolean) => void }) => {
+const Sidemenu = ({ children, session, setIsMenuOpen, darkMode, setDarkMode }: { children: React.ReactNode, session: Session, setIsMenuOpen: (value: boolean) => void, darkMode: boolean, setDarkMode: (value: boolean) => void }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsMenuOpen(false)}>
             <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e) => e.stopPropagation()}>
@@ -39,7 +39,7 @@ const Sidemenu = ({ children, session, setIsMenuOpen }: { children: React.ReactN
 
                     {/* Bottom Actions */}
                     <div className="flex justify-between items-center w-full mt-auto">
-                        <button className="text-white hover:text-gray-300">
+                        <button className="text-white hover:text-gray-300" onClick={()=>setDarkMode(!darkMode)}>
                             <MdDarkMode size={32} />
                         </button>
                         <button

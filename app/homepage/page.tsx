@@ -130,7 +130,7 @@ export default function HomePage() {
 
       {/* Side menu for mobile screens */}
       {isMenuOpen && (
-        <Sidemenu session={session} setIsMenuOpen={setIsMenuOpen}  >
+        <Sidemenu session={session} setIsMenuOpen={setIsMenuOpen} darkMode={darkMode} setDarkMode={setDarkMode} >
           <button
             onClick={() => window.location.href = '/search'}
             className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C] transition"
