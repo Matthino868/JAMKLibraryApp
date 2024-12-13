@@ -1,8 +1,13 @@
 import Image from 'next/image'
+import { useState,} from 'react';
 
-const BookThumb = ({ book, handleBookClick }) => {
+const BookThumb = ({ book, handleBookClick, darkMode }) => {
+    const [_darkMode, _] = useState(darkMode)
+    // console.log(_darkMode)
+    console.log(darkMode)
+    // _(darkMode)
     return (
-        <div className="flex flex-row  items-center justify-between p-4 bg-white shadow-lg rounded-md hover:shadow-2xl hover:bg-gray-50 transition-shadow duration-300" onClick={() => handleBookClick(book)}>
+        <div className={`flex flex-row  items-center justify-between p-4  shadow-lg rounded-md hover:shadow-2xl ${ darkMode ? `hover:bg-gray-800` :  `hover:bg-gray-200`}  transition-shadow duration-300 ${darkMode ? `bg-[#202124]` : `bg-white`}`} onClick={() => handleBookClick(book)}>
             {/* Book Cover */}
             <Image
                 src={`https://placehold.co/64x96/lightgrey/black?text=${encodeURIComponent(book.title)}`}
@@ -15,11 +20,11 @@ const BookThumb = ({ book, handleBookClick }) => {
                 <div className='flex flex-col'>
                     {/* Book Details */}
                     <div className="flex-1 px-4">
-                        <h3 className="font-semibold text-gray-600">{book.title}</h3>
-                        <p className="text-sm text-gray-600">{book.author}</p>
+                        <h3 className={`font-semibold ${darkMode ? `text-white` : `text-black`}`}>{book.title}</h3>
+                        <p className={`text-sm ${darkMode ? `text-gray-500` : `text-black`}`}>{book.author}</p>
                     </div>
                     <div className="hidden sm:block px-4 max-h-[5rem] overflow-hidden">
-                        <p className="">{book.description}</p>
+                        <p className={`${darkMode ? `text-gray-400` : `text-black`}`}>{book.description}</p>
                     </div>
                 </div>
                 {/* Genre and Due Date */}

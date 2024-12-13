@@ -27,6 +27,8 @@ export default function HomePage() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const [darkMode, setDarkMode] = useState(false)
+
   // Fetch books from the API on component mount
   useEffect(() => {
     const fetchBooks = async () => {
@@ -51,7 +53,7 @@ export default function HomePage() {
     setSelectedBook(null);
   };
 
-  if (session===null) {
+  if (session === null) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
         {/* Access Denied Message */}
@@ -100,7 +102,8 @@ export default function HomePage() {
           >
             <FiSearch size={24} />
           </button>
-          <button className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center">
+          <button className="border p-2 rounded-md hover:bg-white hover:text-[#0D004C] flex items-center justify-center"
+            onClick={() => setDarkMode(!darkMode)}>
             <MdDarkMode size={24} />
           </button>
           <button
@@ -147,55 +150,59 @@ export default function HomePage() {
 
       {
         loading ? (
-          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+          <div className={`flex flex-col items-center justify-center min-h-screen ${darkMode ? `bg-black` : `bg-white`}`}>
             {/* Spinner */}
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#0D004C] border-opacity-75 mb-4"></div>
 
             {/* Loading Text */}
-            <p className="text-lg font-medium text-gray-700">Loading...</p>
+            <p className={`text-lg font-medium ${darkMode ? `text-white` : `text-black`}`}>Loading...</p>
           </div>
         ) :
           (
 
-            <div className="container mx-[5%] w-[85%] md:w-3/4">
+            <div className={`flex flex-col px-5 gap-5 w-full ${darkMode ? `bg-black` : `bg-white`}`}>
               { /* Main content */}
-              <h2 className="text-2xl font-bold my-4">Borrowed Books</h2>
-              {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
-                <ul className="flex flex-col gap-2">
-                  {books
-                    .filter((book) => book.userId === session?.user?.id)
-                    .map((book, index) => (
-                      <div key={index}>
-                        <BookThumb book={book} handleBookClick={handleBookClick} />
-                      </div>
-                    ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">No borrowed books.</p>
-              )}
-
-              <h2 className="text-2xl font-bold my-4">Reserved Books</h2>
-              {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
-                <ul className="flex flex-col gap-2">
-                  {books
-                    .filter((book) => book.reserved?.includes(session?.user?.id))
-                    .map((book, index) => (
-                      <div key={index}>
-                        <BookThumb book={book} handleBookClick={handleBookClick} />
-                      </div>
-                    ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">No reserved books...</p>
-              )}
-
-              <h2 className="text-2xl font-bold my-4">Available Books</h2>
-              <div className="flex flex-col gap-2">
-                {books.map((book, index) => (
-                  <div key={index}>
-                    <BookThumb book={book} handleBookClick={handleBookClick} />
-                  </div>
-                ))}
+              <div className=''>
+                <h2 className={`text-2xl font-bold my-4 ${darkMode ? `text-white` : `text-black`}`}>Borrowed Books</h2>
+                {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
+                  <ul className="flex flex-col gap-2">
+                    {books
+                      .filter((book) => book.userId === session?.user?.id)
+                      .map((book, index) => (
+                        <div key={index}>
+                          <BookThumb book={book} handleBookClick={handleBookClick} darkMode={darkMode} />
+                        </div>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No borrowed books.</p>
+                )}
+              </div>
+              <div className=''>
+                <h2 className={`text-2xl font-bold my-4 ${darkMode ? `text-white` : `text-black`}`}>Reserved Books</h2>
+                {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
+                  <ul className="flex flex-col gap-2">
+                    {books
+                      .filter((book) => book.reserved?.includes(session?.user?.id))
+                      .map((book, index) => (
+                        <div key={index}>
+                          <BookThumb book={book} handleBookClick={handleBookClick} darkMode={darkMode} />
+                        </div>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No reserved books...</p>
+                )}
+              </div>
+              <div className=''>
+                <h2 className={`text-2xl font-bold my-4 ${darkMode ? `text-white` : `text-black`}`}>Available Books</h2>
+                <div className="flex flex-col gap-2">
+                  {books.map((book, index) => (
+                    <div key={index}>
+                      <BookThumb book={book} handleBookClick={handleBookClick} darkMode={darkMode}  />
+                    </div>
+                  ))}
+                </div>
               </div>
               <Modal isOpen={!!selectedBook} onClose={closeModal}>
                 {selectedBook && <BookDetails book={selectedBook} />}

@@ -12,6 +12,9 @@ const config: Config = {
       fontFamily: {
         sans: ['SofiaPro', 'ui-sans-serif', 'system-ui'], 
       },
+      screens: {
+        'customBP': '1300px',
+      }
     },
   },
   plugins: [],
