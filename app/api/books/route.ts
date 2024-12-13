@@ -42,7 +42,6 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(userBooks);
     }
-    
 
     // Search queries
     const title = url.searchParams.get('title') // Query param to filter title
