@@ -8,7 +8,11 @@ const config: Config = {
     "./lib/**/*.{js,ts,jsx,tsx}",    // Include any custom folders like `lib` if applicable
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['SofiaPro', 'ui-sans-serif', 'system-ui'], 
+      },
+    },
   },
   plugins: [],
 };

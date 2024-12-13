@@ -17,19 +17,6 @@ interface Book {
     genre: string[];
 }
 
-enum Genre {
-    Romance = 'romance',
-    SciFi = 'sci-fi',
-    Comedy = 'comedy',
-    Thriller = 'thriller',
-    Mystery = 'mystery',
-    Fantasy = 'fantasy',
-    Horror = 'horror',
-    HistoricalFiction = 'historical fiction',
-    NonFiction = 'non-fiction',
-    Biography = 'biography',
-}
-
 export default function SearchPage() {
     const [query, setQuery] = useState('');
     const [title, setTitle] = useState('');

@@ -50,7 +50,7 @@ export default function HomePage() {
   const closeModal = () => {
     setSelectedBook(null);
   };
-  console.log("Session", session);
+
   if (session===null) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
@@ -130,14 +130,14 @@ export default function HomePage() {
         <Sidemenu session={session} setIsMenuOpen={setIsMenuOpen}  >
           <button
             onClick={() => window.location.href = '/search'}
-            className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
+            className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C] transition"
           >
             Search books
           </button>
           {session.user.admin && (
             <button
               onClick={() => window.location.href = '/testpage'}
-              className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
+              className="bg-transparent border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-[#0D004C] transition"
             >
               Admin Panel
             </button >
@@ -157,11 +157,11 @@ export default function HomePage() {
         ) :
           (
 
-            <div className="container ml-[5%] ">
+            <div className="container mx-[5%] w-[85%] md:w-3/4">
               { /* Main content */}
               <h2 className="text-2xl font-bold my-4">Borrowed Books</h2>
               {books.filter((book) => book.userId === session?.user?.id).length > 0 ? (
-                <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+                <ul className="flex flex-col gap-2">
                   {books
                     .filter((book) => book.userId === session?.user?.id)
                     .map((book, index) => (
@@ -176,7 +176,7 @@ export default function HomePage() {
 
               <h2 className="text-2xl font-bold my-4">Reserved Books</h2>
               {books.filter((book) => book.reserved?.includes(session?.user?.id)).length > 0 ? (
-                <ul className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+                <ul className="flex flex-col gap-2">
                   {books
                     .filter((book) => book.reserved?.includes(session?.user?.id))
                     .map((book, index) => (
@@ -190,7 +190,7 @@ export default function HomePage() {
               )}
 
               <h2 className="text-2xl font-bold my-4">Available Books</h2>
-              <div className="flex flex-col space-y- w-full md:w-3/4 gap-2">
+              <div className="flex flex-col gap-2">
                 {books.map((book, index) => (
                   <div key={index}>
                     <BookThumb book={book} handleBookClick={handleBookClick} />

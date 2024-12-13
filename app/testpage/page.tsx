@@ -159,68 +159,8 @@ export default function Testpage() {
                         >
                             Search books
                         </button>
-                    )}</Sidemenu>
-                // <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsMenuOpen(false)}>
-                //     <div className="bg-[#0D004C] w-2/3 sm:w-1/3 h-full p-4 fixed right-0" onClick={(e) => e.stopPropagation()}>
-                //         <button
-                //             onClick={() => setIsMenuOpen(false)}
-                //             className="text-white absolute top-2 right-2 text-2xl"
-                //         >
-                //             &times;
-                //         </button>
-
-                //         {/* User Info */}
-                //         <div className="flex flex-col items-center justify-between h-full">
-                //             <div className="flex flex-col items-center">
-                //                 <Image
-                //                     src={`https://placehold.co/320x320/lightgrey/black?text=${encodeURIComponent(session.user.name)}`}
-                //                     alt="Profile"
-                //                     className="w-40 h-40 rounded-full"
-                //                     width={96}
-                //                     height={96}
-                //                 />
-                //                 <h1 className="text-white text-2xl mt-4">{session.user.name}</h1>
-                //                 <h2 className="text-gray-400 mb-4">{session.user.email}</h2>
-                //             </div>
-
-                //             {/* Menu Links */}
-                //             <div className="flex flex-col w-full gap-5">
-                //                 <hr className="border-t border-white w-full" />
-                //                 <button
-                //                     onClick={() => window.location.href = '/homepage'}
-                //                     className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                //                 >
-                //                     Homepage
-                //                 </button>
-                //                 {session.user.admin && (
-                //                     <button
-                //                         onClick={() => window.location.href = '/search'}
-                //                         className="bg-white text-[#0D004C] px-4 py-2 rounded-md hover:bg-gray-200"
-                //                     >
-                //                         Search books
-                //                     </button>
-                //                 )}
-                //                 <hr className="border-t border-white w-full" />
-                //             </div>
-
-                //             {/* Bottom Actions */}
-                //             <div className="flex justify-between items-center w-full mt-auto">
-                //                 <button className="text-white hover:text-gray-300">
-                //                     <MdDarkMode size={32} />
-                //                 </button>
-                //                 <button
-                //                     onClick={async () => {
-                //                         const res = await signOut();
-                //                         console.log(res);
-                //                     }}
-                //                     className="bg-pink-500 text-white p-2 rounded-md hover:bg-white hover:text-pink-800 flex items-center justify-center transition"
-                //                 >
-                //                     <FiLogOut size={24} />
-                //                 </button>
-                //             </div>
-                //         </div>
-                //     </div>
-                // </div>
+                    )}
+                </Sidemenu>
             )}
             <div className="flex flex-col sm:flex-row ml-6 mr-6 gap-10">
                 <div className='sm:w-1/2'>
@@ -261,6 +201,15 @@ export default function Testpage() {
                                 type="text"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
+                                className="mt-1 p-2 border rounded w-full"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Published Date:</label>
+                            <input
+                                type="date"
+                                // value={publishedAt}
+                                // onChange={(e) => setPublishedAt(e.target.value)}
                                 className="mt-1 p-2 border rounded w-full"
                             />
                         </div>
