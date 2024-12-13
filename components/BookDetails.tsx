@@ -29,10 +29,10 @@ const BookDetails = ({ book }) => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200 flex gap-6">
+    <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200 flex flex-col gap-6">
       {/* Book Image */}
-      <div className="w-1/3 flex-shrink-0">
-        <Image className="w-auto h-auto" src={`https://placehold.co/640x960/lightgrey/black?text=${encodeURIComponent(book.title)}`} alt="Book cover" width={64} height={96} />
+      <div className="w-full sm:w-1/3 flex flex-shrink-0 justify-center">
+        <Image className="w-[30%] h-auto" src={`https://placehold.co/640x960/lightgrey/black?text=${encodeURIComponent(book.title)}`} alt="Book cover" width={64} height={96} />
       </div>
 
       {/* Book Details */}
