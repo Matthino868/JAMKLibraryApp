@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -59,7 +58,7 @@ export default function Home() {
         <h3 className="text-xl mt-4">Time Spent</h3>
         <p>
           The reserved time for this work was 27 hours since I am working alone. However, I spent much more time than that on the project,
-          given that it's a full-stack application. I've spent multiple 10+ hour days working on it, and I estimate I spent over 27 hours just on the frontend.
+          given that it is a full-stack application. I have spent multiple 10+ hour days working on it, and I estimate I spent over 27 hours just on the frontend.
           While not every hour was spent on the frontend alone, I still dedicated a significant amount of time to it.
         </p>
       </section>
